@@ -44,7 +44,7 @@ if ($u) {  // Two ways to specify the module
 $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
 
 require_course_login($course, true, $cm);
-$context = context_module::instance($cm->id);
+$context = get_context_instance(CONTEXT_MODULE, $cm->id);
 require_capability('mod/morsle:view', $context);
 
 add_to_log($course->id, 'morsle', 'view', 'view.php?id='.$cm->id, $morsle->id, $cm->id);
