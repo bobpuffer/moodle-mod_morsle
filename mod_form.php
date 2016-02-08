@@ -50,6 +50,7 @@ class mod_morsle_mod_form extends moodleform_mod {
         //-------------------------------------------------------
         $mform->addElement('header', 'content', get_string('contentheader', 'morsle'));
         $mform->addElement('url', 'externalurl', get_string('externalurl', 'morsle'), array('size'=>'60'), array('usefilepicker'=>true));
+        $mform->setType('externalurl', PARAM_URL);
         $mform->addRule('externalurl', null, 'required', null, 'client');
         //-------------------------------------------------------
         $mform->addElement('header', 'optionssection', get_string('optionsheader', 'morsle'));

@@ -46,7 +46,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('morsle/framesize',
         get_string('framesize', 'morsle'), get_string('configframesize', 'morsle'), 130, PARAM_INT));
     $settings->add(new admin_setting_configcheckbox('morsle/requiremodintro',
-        get_string('requiremodintro', 'admin'), get_string('configrequiremodintro', 'admin'), 1));
+        get_string('requiremodintro', 'admin'), get_string('requiremodintro_desc', 'admin'), 1));
     $settings->add(new admin_setting_configpasswordunmask('morsle/secretphrase', get_string('password'),
         get_string('configsecretphrase', 'morsle'), ''));
     $settings->add(new admin_setting_configcheckbox('morsle/rolesinparams',
