@@ -28,24 +28,30 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once ($CFG->dirroot.'/course/moodleform_mod.php');
 require_once($CFG->dirroot.'/mod/morsle/locallib.php');
+require_once("$CFG->dirroot/blocks/morsle/morsle.php");
+require_once("$CFG->dirroot/repository/morsle/lib.php");
+require_once("$CFG->dirroot/google/lib.php");
 
 class mod_morsle_mod_form extends moodleform_mod {
     function definition() {
-        global $CFG, $DB;
+        global $CFG, $DB, $USER;
         $mform = $this->_form;
 
         $config = get_config('morsle');
+        $this->morsle = new morsle($USER->email);
+//        $username = 'puffro01@luther.edu';
+//        $morsle = new morsle($username);
 
         //-------------------------------------------------------
         $mform->addElement('header', 'general', get_string('general', 'form'));
-        $mform->addElement('text', 'name', get_string('namenotrequired','morsle'), array('size'=>'48'));
+        $mform->addElement('text', 'name', get_string('namerequired'), array('size'=>'48'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
             $mform->setType('name', PARAM_CLEANHTML);
         }
-//        $mform->addRule('name', null, 'required', null, 'client');
-//        $this->add_intro_editor($config->requiremodintro);
+        $mform->addRule('name', null, 'required', null, 'client');
+        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         //-------------------------------------------------------
         $mform->addElement('header', 'content', get_string('contentheader', 'morsle'));
@@ -171,19 +177,19 @@ class mod_morsle_mod_form extends moodleform_mod {
     function validation($data, $files) {
 		// need to fill in name with document title if it wasn't supplied
     	if ($data['name'] == '') {
-	    	global $CFG, $USER, $COURSE;
+	    	global $CFG, $USER;
 			require_once("$CFG->dirroot/google/lib.php");
-
 		    if ( !$CONSUMER_KEY = get_config('morsle','consumer_key')) {
 		        exit;
 		    }
-
 		    $owner = strtolower($USER->email);
-		    $owner = strtolower($COURSE->shortname . '@' . $CONSUMER_KEY);
+//		    $owner = strtolower($COURSE->shortname . '@' . $CONSUMER_KEY);
 			$id = get_doc_id($data['externalurl']);
-			$feed = get_feed_by_id($owner, $id);
-			$data['name'] = (string) $feed->title;
-			$this->_form->_submitValues['name'] = $data['name'];
+            $properties = retrieve_properties($this->morsle->service,$id);
+//            $feed = get_doc_feed_by_id($this->morsle, $id);
+//			$feed = get_doc_feed_by_name($this->morsle, $data['name']);
+//			$data['name'] = (string) $feed->title;
+//			$this->_form->_submitValues['name'] = $data['name'];
 		}
     	$errors = parent::validation($data, $files);
 
